@@ -1,0 +1,33 @@
+version: "3.1"
+
+services:
+
+  # https://hub.docker.com/_/redmine/
+  redmine:
+    image: redmine:3.4.2
+    restart: always
+    ports:
+      - 3000:3000
+    depends_on:
+      - db
+    environment:
+      REDMINE_DB_POSTGRES: db
+      REDMINE_DB_DATABASE: redmine
+      REDMINE_DB_USERNAME: redmine
+      REDMINE_DB_PASSWORD: redmine
+    volumes:
+      - ./redmine/files:/usr/src/redmine/files
+
+
+  # Or else, https://github.com/sameersbn/docker-redmine (sameersbn/redmine) is also a good image.
+
+  # https://hub.docker.com/_/postgres/
+  db:
+    image: postgres:9.6.3
+    restart: always
+    environment:
+      POSTGRES_DB: redmine
+      POSTGRES_USER: redmine
+      POSTGRES_PASSWORD: redmine
+    volumes:
+     - ./redmine/pgdata:/var/lib/postgresql/data
