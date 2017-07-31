@@ -8,7 +8,7 @@
    ```
 3. Then initializing vbox process gets started.
 4. A disk image file `docker-disk-volume.vdi` (up to 50GiB) will be created. This has been mounted to `/opt/docker`. DO NOT REMOVE.
-5. After all initialization process finished, open http://localhost:3000. There is a Redmine. (`admin`/`admin123`)
+5. After all initialization process finished, open http://localhost:18080. There is a Redmine. (`admin`/`admin123`)
 
 ## Resources
 
