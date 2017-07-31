@@ -13,3 +13,7 @@
 ## Resources
 
 * https://github.com/sameersbn/docker-redmine
+
+## License
+
+MIT License

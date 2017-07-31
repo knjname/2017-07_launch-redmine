@@ -1,2 +1,3 @@
 .vagrant
 *.vdi
+redmine-docker-template/redmine
