@@ -3,7 +3,7 @@
 
 Vagrant.configure("2") do |config|
 
-  config.vm.box = "https://github.com/CommanderK5/packer-centos-template/releases/download/0.7.2/vagrant-centos-7.2.box"
+  config.vm.box = "bento/centos-7.3"
   config.vm.hostname = "RedmineDev"
   config.vm.box_check_update = false
 
@@ -56,13 +56,16 @@ Vagrant.configure("2") do |config|
   # end
 
   config.vm.provision "shell", inline: <<-SHELL
-    # Add a disk and expand.
+    # Add an XFS+LVM disk and mount it to /opt/docker.
     parted /dev/sdb --script -- mklabel msdos
     parted /dev/sdb --script -- mkpart primary 0% 100%
     pvcreate /dev/sdb1
-    vgextend /dev/centos /dev/sdb1
-    lvresize -l +100%FREE /dev/centos/root
-    xfs_growfs /dev/centos/root
+    vgcreate docker /dev/sdb1
+    lvcreate -l +100%FREE -n docker docker
+    mkfs.xfs /dev/docker/docker
+    mkdir /opt/docker
+    echo '/dev/mapper/docker-docker /opt/docker xfs defaults 0 0' >> /etc/fstab
+    mount /opt/docker
 
     # Package initialization.
     yum -y update
@@ -75,11 +78,14 @@ Vagrant.configure("2") do |config|
     systemctl start docker.service
 
     # Install docker-compose.
-    yum -y install python-pip
-    pip install docker-compose
+    curl -L https://github.com/docker/compose/releases/download/1.14.0/docker-compose-`uname -s`-`uname -m` > /usr/bin/docker-compose
+    chmod +x /usr/bin/docker-compose
+
+    # Install other tools. (Optional)
+    yum -y install git
 
     # Copy redmine-docker-template.
-    cp -r /redmine-docker-template /opt/docker
+    cp -r /redmine-docker-template/* /opt/docker
 
     # Run docker-compose.
     cd /opt/docker

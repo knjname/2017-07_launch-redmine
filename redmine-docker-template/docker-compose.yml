@@ -2,31 +2,31 @@ version: "3.1"
 
 services:
 
-  # https://hub.docker.com/_/redmine/
+  # https://github.com/sameersbn/docker-redmine
   redmine:
-    image: redmine:3.4.2
+    image: sameersbn/redmine:3.4.1
     restart: always
     ports:
       - 3000:3000
     depends_on:
       - db
     environment:
-      REDMINE_DB_POSTGRES: db
-      REDMINE_DB_DATABASE: redmine
-      REDMINE_DB_USERNAME: redmine
-      REDMINE_DB_PASSWORD: redmine
+      TZ: Asia/Tokyo
+      REDMINE_PORT: 3000
+      DB_ADAPTER: postgresql
+      DB_HOST: db
+      DB_NAME: redmine
+      DB_USER: redmine
+      DB_PASS: redmine
+      NGINX_MAX_UPLOAD_SIZE: 20m
     volumes:
-      - ./redmine/files:/usr/src/redmine/files
-
-
-  # Or else, https://github.com/sameersbn/docker-redmine (sameersbn/redmine) is also a good image.
+      - ./redmine/data:/home/redmine/data
 
   # https://hub.docker.com/_/postgres/
   db:
     image: postgres:9.6.3
     restart: always
     environment:
-      POSTGRES_DB: redmine
       POSTGRES_USER: redmine
       POSTGRES_PASSWORD: redmine
     volumes:
