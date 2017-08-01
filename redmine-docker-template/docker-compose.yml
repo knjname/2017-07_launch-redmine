@@ -29,4 +29,4 @@ services:
       POSTGRES_USER: redmine
       POSTGRES_PASSWORD: redmine
     volumes:
-     - ./redmine/pgdata:/var/lib/postgresql/data
+      - ./redmine/pgdata:/var/lib/postgresql/data
